@@ -37,10 +37,10 @@ fdisk /dev/sda
 
 | Partition  | Space  | Type             |
 |------------|--------|------------------|
-| /dev/sda1  | 512M   | EFI System       |
-| /dev/sda2  | xG     | Linux Filesystem |
-| /dev/sda3  | xG     | Linux swap       |
-| /dev/sda4  | xG     | Home Partition   |
+| /dev/sda1  | xG     | Linux Filesystem |
+| /dev/sda2  | xG     | Linux swap       |
+| /dev/sda3  | xG     | Home Partition   |
+| /dev/sda4  | 512M   | EFI System       |
 
 **BIOS/MBR:**
 
@@ -55,32 +55,32 @@ fdisk /dev/sda
 `/` partition:
 
 ```sh
-mkfs.ext4 /dev/sda2
-mount /dev/sda2 /mnt
+mkfs.ext4 /dev/sda1
+mount /dev/sda1 /mnt
 ```
 
 
 `/boot` partition: (UEFI/GPT) 
 
 ```sh
-mkfs.fat -F32 /dev/sda1
+mkfs.fat -F32 /dev/sda4
 mkdir /mnt/boot/EFI
-mount /dev/sda1 /mnt/boot/EFI
+mount /dev/sda4 /mnt/boot/EFI
 ```
 
 `swap` partition:
 
 ```sh
-mkswap /dev/sda3
-swapon /dev/sda3
+mkswap /dev/sda2
+swapon /dev/sda2
 ```
 
 `home` partition:
 
 ```sh
-mkfs.ext4 /dev/sda4
+mkfs.ext4 /dev/sda3
 mkdir /mnt/home
-mount /dev/sda4 /mnt/home
+mount /dev/sda3 /mnt/home
 ```
 
 ## Install system
@@ -136,9 +136,9 @@ echo "$HOSTNAME" > /etc/hostname
 /etc/hosts file:
 
 ```sh
-echo "127.0.0.1 localhost
-::1 localhost
-127.0.1.1 $HOSTNAME.localdomain $HOSTNAME" >> /etc/hosts
+127.0.0.1      localhost
+::1            localhost
+127.0.1.1   $HOSTNAME.localdomain   $HOSTNAME
 ```
 
 Set root password:
