@@ -33,12 +33,22 @@ timedatectl set-ntp true
 fdisk /dev/sda
 ```
 
+**UEFI/GPT:**
+
 | Partition  | Space  | Type             |
 |------------|--------|------------------|
 | /dev/sda1  | 512M   | EFI System       |
 | /dev/sda2  | xG     | Linux Filesystem |
 | /dev/sda3  | xG     | Linux swap       |
 | /dev/sda4  | xG     | Home Partition   |
+
+**BIOS/MBR:**
+
+| Partition  | Space  | Type             |
+|------------|--------|------------------|
+| /dev/sda1  | xG     | Linux Filesystem |
+| /dev/sda2  | xG     | Linux swap       |
+| /dev/sda3  | xG     | Home Partition   |
 
 #### File systems
 
@@ -50,7 +60,7 @@ mount /dev/sda2 /mnt
 ```
 
 
-`/boot` partition:
+`/boot` partition: (UEFI/GPT) 
 
 ```sh
 mkfs.fat -F32 /dev/sda1
@@ -137,24 +147,36 @@ Set root password:
 passwd
 ```
 
-## Intel Microcode
-
+## Microcode
 - https://wiki.archlinux.org/index.php/Microcode
 
+### Intel
 ```sh
 pacman -S intel-ucode
+```
+
+### AMD
+```sh 
+pacman -S amd-ucode
 ```
 
 ## Bootloader: GRUB
 
 - https://wiki.archlinux.org/title/GRUB
 
+### UEFI/GPT
 ```sh
 pacman -S grub efibootmgr grub 
 grub-install --target=x86_64-efi --bootloader-id=grub_uefi --recheck
 grub-mkconfig -o /boot/grub/grub.cfg
 ```
 
+### BIOS/MBR
+```sh
+pacman -S grub dosfstools 
+grub-install /dev/sda
+grub-mkconfig -o /boot/grub/grub.cfg
+```
 ## Networking: NetworkManager
 
 - https://wiki.archlinux.org/index.php/NetworkManager
@@ -168,7 +190,7 @@ systemctl enable NetworkManager
  
  ```sh
 exit
-umount -R /mnt
+mount -R /mnt
 reboot
 ```
 
