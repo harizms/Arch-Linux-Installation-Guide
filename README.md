@@ -18,7 +18,7 @@ ls /sys/firmware/efi/efivars
 ```
 
 
-Enable NTP and set timezone
+Ensure the system clock is accurate
 
 ```sh
 timedatectl set-ntp true
