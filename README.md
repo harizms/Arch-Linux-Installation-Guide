@@ -190,7 +190,7 @@ systemctl enable NetworkManager
  
  ```sh
 exit
-mount -R /mnt
+umount -R /mnt
 reboot
 ```
 
@@ -208,6 +208,11 @@ permit :wheel # Permit users in wheel group to run commands as root
 permit persist :wheel 
 permit nopass :wheel as root cmd pacman args -Syu # Allows users in wheel to run pacman -Syu without password
 ````
+The owner and group for /etc/doas.conf should both be ``0`` ,file permissions should be set to ``0400``:
+```sh
+chmod -c root:root /etc/doas.conf
+chmod -c 0400 /etc/doas.conf
+```
 
 ## Desktop Environment: Plasma KDE
 
@@ -230,7 +235,7 @@ systemctl enable --now sddm
 
 - https://wiki.archlinux.org/index.php/AUR_helpers
 
-I use `paru` 
+I use [`paru`](https://github.com/morganamilo/paru)
 
 ```sh
 git clone https://aur.archlinux.org/paru.git
