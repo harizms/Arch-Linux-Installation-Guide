@@ -240,7 +240,7 @@ I use [`paru`](https://github.com/morganamilo/paru)
 ```sh
 git clone https://aur.archlinux.org/paru.git
 cd paru
-makepkg -si
+makepkg -sirc
 ```
 
 
