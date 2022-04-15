@@ -68,7 +68,7 @@ mkdir /mnt/boot/EFI
 mount /dev/sda4 /mnt/boot/EFI
 ```
 
-`swap` partition:
+`[SWAP]` partition:
 
 ```sh
 mkswap /dev/sda2
