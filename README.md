@@ -75,7 +75,7 @@ mkswap /dev/sda2
 swapon /dev/sda2
 ```
 
-`home` partition:
+`/home` partition:
 
 ```sh
 mkfs.ext4 /dev/sda3
