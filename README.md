@@ -68,7 +68,7 @@ mkdir /mnt/boot/EFI
 mount /dev/sda4 /mnt/boot/EFI
 ```
 
-`[SWAP]` partition:
+`swap` partition:
 
 ```sh
 mkswap /dev/sda2
@@ -88,7 +88,7 @@ mount /dev/sda3 /mnt/home
 Install the base packages:
 
 ```sh
-pacstrap /mnt base base-devel linux linux-firmware
+pacstrap /mnt base base-devel linux linux-firmware zsh vim
 ```
 
 ## System setup
@@ -113,7 +113,11 @@ ln -sf /usr/share/zoneinfo/Region/City /etc/localtime
 hwclock --systohc
 ```
 
-Uncomment `en_US.UTF-8 UTF-8` in `/etc/locale.gen`.
+Set locale :
+
+```sh
+sed -i 's/#en_US.UTF-8/en_US.UTF-8/g' /etc/locale.gen
+```
 
 Generate locales:
 
@@ -134,6 +138,8 @@ echo "$HOSTNAME" > /etc/hostname
 ```
 
 /etc/hosts file:
+
+**Replace $HOSTNAME with a name you prefer**
 
 ```sh
 127.0.0.1      localhost
@@ -200,17 +206,25 @@ Add user:
 
 ```sh
 useradd -m -g wheel -C 'Full name' -s /usr/bin/zsh username
+passwd username
 ```
-To enable root access, create a file as /etc/doas.conf (I will be using doas instead of sudo)
 
+Install OpenDoas:
+
+***sudo already comes with the base-devel package***
+
+```sh
+pacman -S opendoas
+```
+Add this to /etc/doas.conf :
 ````
-permit :wheel # Permit users in wheel group to run commands as root
+permit :wheel 
 permit persist :wheel 
-permit nopass :wheel as root cmd pacman args -Syu # Allows users in wheel to run pacman -Syu without password
+permit nopass :wheel as root cmd pacman args -Syu
 ````
 The owner and group for /etc/doas.conf should both be ``0`` ,file permissions should be set to ``0400``:
 ```sh
-chmod -c root:root /etc/doas.conf
+chown -c root:root /etc/doas.conf
 chmod -c 0400 /etc/doas.conf
 ```
 
@@ -238,9 +252,9 @@ systemctl enable --now sddm
 I use [`paru`](https://github.com/morganamilo/paru)
 
 ```sh
-git clone https://aur.archlinux.org/paru.git
-cd paru
-makepkg -sirc
+$ git clone https://aur.archlinux.org/paru.git
+$ cd paru
+$ makepkg -sirc
 ```
 
 
