@@ -137,7 +137,7 @@ Set hostname:
 echo "$HOSTNAME" > /etc/hostname
 ```
 
-/etc/hosts file:
+`/etc/hosts` file:
 
 **Replace $HOSTNAME with a name you prefer**
 
@@ -172,7 +172,7 @@ pacman -S amd-ucode
 
 ### UEFI/GPT
 ```sh
-pacman -S grub efibootmgr grub 
+pacman -S grub efibootmgr 
 grub-install --target=x86_64-efi --bootloader-id=grub_uefi --recheck
 grub-mkconfig -o /boot/grub/grub.cfg
 ```
