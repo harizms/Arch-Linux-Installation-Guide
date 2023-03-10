@@ -29,6 +29,8 @@ timedatectl set-ntp true
 - https://wiki.archlinux.org/index.php/Partitioning
 - https://wiki.archlinux.org/index.php/EFI_system_partition
 
+**Assuming that your drive is `/dev/sda`. Use `lsblk` to find your drive**
+
 ```sh
 fdisk /dev/sda
 ```
@@ -74,13 +76,13 @@ swapon /dev/sda3
 
 `/boot` partition: (UEFI/GPT) 
 
+<span style="color:red">Warning: Only format the EFI system partition if you created it during the partitioning step. If there already was an EFI system partition on disk beforehand, reformatting it can destroy the boot loaders of other installed operating systems.</span>
+
 ```sh
 mkfs.fat -F32 /dev/sda4
-mkdir /mnt/boot/EFI
+mkdir -p /mnt/boot/EFI
 mount /dev/sda4 /mnt/boot/EFI
 ```
-
-
 
 ## Install system
 
@@ -95,7 +97,7 @@ pacstrap /mnt base base-devel linux linux-firmware zsh neovim
 Generate fstab:
 
 ```sh
-genfstab -U /mnt > /mnt/etc/fstab
+genfstab -U /mnt >> /mnt/etc/fstab
 ```
 
 
@@ -132,13 +134,13 @@ echo "LANG=en_US.UTF-8" > /etc/locale.conf
 
 Set hostname:
 
+**Replace $HOSTNAME with a name you prefer**
+
 ```sh
 echo "$HOSTNAME" > /etc/hostname
 ```
 
-/etc/hosts file:
-
-**Replace $HOSTNAME with a name you prefer**
+`/etc/hosts` file:
 
 ```sh
 127.0.0.1      localhost
@@ -171,7 +173,7 @@ pacman -S amd-ucode
 
 ### UEFI/GPT
 ```sh
-pacman -S grub efibootmgr grub 
+pacman -S grub efibootmgr 
 grub-install --target=x86_64-efi --bootloader-id=grub_uefi --recheck
 grub-mkconfig -o /boot/grub/grub.cfg
 ```
@@ -204,13 +206,22 @@ reboot
 Add user:
 
 ```sh
-useradd -m -g wheel -C 'Full name' -s /usr/bin/zsh username
+useradd -m -g wheel -c 'Full name' -s /usr/bin/zsh username
 passwd username
 ```
 
-Install OpenDoas:
+### Admin Privileges
+
+#### Sudo
 
 ***sudo already comes with the base-devel package***
+
+Uncomment the line %wheel ALL=(ALL:ALL) ALL :
+
+```sh
+sed -i 's/#%wheel ALL=(ALL:ALL) ALL/%wheel ALL=(ALL:ALL) ALL/g' /etc/sudoers
+```
+#### OpenDoas
 
 ```sh
 pacman -S opendoas
@@ -249,6 +260,10 @@ systemctl enable --now sddm
 - https://wiki.archlinux.org/index.php/AUR_helpers
 
 I prefer [`paru`](https://github.com/morganamilo/paru)
+
+<span style="color:red">Warning: AUR packages are user-produced content. These PKGBUILDs are completely unofficial and have not been thoroughly vetted. Any use of the provided files is at your own risk.</span>
+
+Note : **Running makepkg as root is not allowed**
 
 ```sh
 $ git clone https://aur.archlinux.org/paru.git
