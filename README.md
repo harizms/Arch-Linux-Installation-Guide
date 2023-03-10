@@ -38,8 +38,8 @@ fdisk /dev/sda
 | Partition  | Space  | Type             |
 |------------|--------|------------------|
 | /dev/sda1  | xG     | Linux Filesystem |
-| /dev/sda2  | xG     | Linux swap       |
-| /dev/sda3  | xG     | Home Partition   |
+| /dev/sda2  | xG     | Home Partition   |
+| /dev/sda3  | xG     | Linux swap       |
 | /dev/sda4  | 512M   | EFI System       |
 
 **BIOS/MBR:**
@@ -47,8 +47,8 @@ fdisk /dev/sda
 | Partition  | Space  | Type             |
 |------------|--------|------------------|
 | /dev/sda1  | xG     | Linux Filesystem |
-| /dev/sda2  | xG     | Linux swap       |
-| /dev/sda3  | xG     | Home Partition   |
+| /dev/sda2  | xG     | Home Partition   |
+| /dev/sda3  | xG     | Linux swap       |
 
 #### File systems
 
@@ -58,7 +58,19 @@ fdisk /dev/sda
 mkfs.ext4 /dev/sda1
 mount /dev/sda1 /mnt
 ```
+`/home` partition:
 
+```sh
+mkfs.ext4 /dev/sda3
+mkdir /mnt/home
+mount /dev/sda3 /mnt/home
+```
+`swap` partition:
+
+```sh
+mkswap /dev/sda2
+swapon /dev/sda2
+```
 
 `/boot` partition: (UEFI/GPT) 
 
@@ -68,27 +80,14 @@ mkdir /mnt/boot/EFI
 mount /dev/sda4 /mnt/boot/EFI
 ```
 
-`swap` partition:
 
-```sh
-mkswap /dev/sda2
-swapon /dev/sda2
-```
-
-`/home` partition:
-
-```sh
-mkfs.ext4 /dev/sda3
-mkdir /mnt/home
-mount /dev/sda3 /mnt/home
-```
 
 ## Install system
 
 Install the base packages:
 
 ```sh
-pacstrap /mnt base base-devel linux linux-firmware zsh vim
+pacstrap /mnt base base-devel linux linux-firmware zsh neovim
 ```
 
 ## System setup
@@ -137,7 +136,7 @@ Set hostname:
 echo "$HOSTNAME" > /etc/hostname
 ```
 
-`/etc/hosts` file:
+/etc/hosts file:
 
 **Replace $HOSTNAME with a name you prefer**
 
@@ -172,7 +171,7 @@ pacman -S amd-ucode
 
 ### UEFI/GPT
 ```sh
-pacman -S grub efibootmgr 
+pacman -S grub efibootmgr grub 
 grub-install --target=x86_64-efi --bootloader-id=grub_uefi --recheck
 grub-mkconfig -o /boot/grub/grub.cfg
 ```
@@ -249,7 +248,7 @@ systemctl enable --now sddm
 
 - https://wiki.archlinux.org/index.php/AUR_helpers
 
-I use [`paru`](https://github.com/morganamilo/paru)
+I prefer [`paru`](https://github.com/morganamilo/paru)
 
 ```sh
 $ git clone https://aur.archlinux.org/paru.git
@@ -270,14 +269,14 @@ doas systemctl enable --now thermald.service
 
 ## Enabling Hardware Acceleration
 
-Enabling hardware acceleration is important it'll use your laptops GPU for stuff like video decoding or encoding instead of your CPU, it will make your laptop run cooler and faster while saving power this can resolve issues like videos stuttering and your laptop being hot while watching videos, I recommend looking into the Arch Wiki guide hardware acceleration for applications below after you've set this up.
+Enabling hardware acceleration is important, it'll use your laptops GPU for video decoding or encoding instead of your CPU, it will make your laptop run cooler and faster while saving power this can resolve issues like videos stuttering and your laptop being hot while watching videos, I recommend looking into the Arch Wiki guide hardware acceleration for applications below after you've set this up.
 
 &#x200B;
 run ``lspci | grep VGA`` to see your GPU
 
-For Intel GPU's 2014 and newer I recommend you install ``doas pacman -S intel-media-driver`` \- From Arch Wiki. > ***"HD Graphics series starting from Broadwell (2014) and newer are supported by intel-media-driver."***
+For Intel GPU's 2014 and newer I recommend you install ``doas pacman -S intel-media-driver`` \- From Arch Wiki. > **"HD Graphics series starting from Broadwell (2014) and newer are supported by intel-media-driver."**
 
-For Intel GPU's 2013 and older I recommend you install ``doas pacman -S libva-intel-driver``  \-  From Arch Wiki > ***"GMA 4500 (2008) and newer GPUs, including HD Graphics up to Coffee Lake (2017) are supported by libva-intel-driver."***
+For Intel GPU's 2013 and older I recommend you install ``doas pacman -S libva-intel-driver``  \-  From Arch Wiki > **"GMA 4500 (2008) and newer GPUs, including HD Graphics up to Coffee Lake (2017) are supported by libva-intel-driver."**
 
 You'll also want to ``sudo pacman -S libvdpau-va-gl libva-utils vdpauinfo``
 
