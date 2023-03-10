@@ -61,15 +61,15 @@ mount /dev/sda1 /mnt
 `/home` partition:
 
 ```sh
-mkfs.ext4 /dev/sda3
+mkfs.ext4 /dev/sda2
 mkdir /mnt/home
-mount /dev/sda3 /mnt/home
+mount /dev/sda2 /mnt/home
 ```
 `swap` partition:
 
 ```sh
-mkswap /dev/sda2
-swapon /dev/sda2
+mkswap /dev/sda3
+swapon /dev/sda3
 ```
 
 `/boot` partition: (UEFI/GPT) 
