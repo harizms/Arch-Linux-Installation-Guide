@@ -262,7 +262,7 @@ systemctl enable --now sddm
 
 I prefer [`paru`](https://github.com/morganamilo/paru)
 
-<span style="color:red">Warning: AUR packages are user-produced content. These PKGBUILDs are completely unofficial and have not been thoroughly vetted. Any use of the provided files is at your own risk.</span>
+#### $\textcolor{red}{\textsf{Warning :}}$ AUR packages are user-produced content. These PKGBUILDs are completely unofficial and have not been thoroughly vetted. Any use of the provided files is at your own risk.</span>
 
 Note : **Running makepkg as root is not allowed**
 
