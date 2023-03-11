@@ -24,12 +24,13 @@ Ensure the system clock is accurate
 timedatectl set-ntp true
 ```
 
+
 ## Disk management
 
 - https://wiki.archlinux.org/index.php/Partitioning
 - https://wiki.archlinux.org/index.php/EFI_system_partition
 
-**Assuming that your drive is `/dev/sda`. Use `lsblk` to find your drive**
+**$\textcolor{yellow}{\textsf{Assuming that your drive is}}$ /dev/sda .Use `lsblk` to find your drive**
 
 ```sh
 fdisk /dev/sda
@@ -76,7 +77,7 @@ swapon /dev/sda3
 
 `/boot` partition: (UEFI/GPT) 
 
-<span style="color:red">Warning: Only format the EFI system partition if you created it during the partitioning step. If there already was an EFI system partition on disk beforehand, reformatting it can destroy the boot loaders of other installed operating systems.</span>
+#### $\textcolor{red}{\textsf{Warning : }}$ Only format the EFI system partition if you created it during the partitioning step. If there already was an EFI system partition on disk beforehand, reformatting it can destroy the boot loaders of other installed operating systems.</span>
 
 ```sh
 mkfs.fat -F32 /dev/sda4
